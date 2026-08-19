@@ -38,10 +38,27 @@ export default function Home() {
     }
   };
 
-  const handleUnlock = (e) => {
+  const handleUnlock = async (e) => {
     e.preventDefault();
     if (lead.name && lead.email) {
+      // 1. Desbloqueamos los resultados de inmediato para el usuario
       setIsUnlocked(true);
+
+      // 2. Enviamos los datos a Resend mediante tu endpoint de la API
+      try {
+        await fetch('/api/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: lead.name,
+            email: lead.email,
+            phone: lead.phone,
+            url: result?.url || url
+          }),
+        });
+      } catch (err) {
+        console.error('Error al enviar el email:', err);
+      }
     }
   };
 
@@ -156,7 +173,7 @@ export default function Home() {
                       required
                       value={lead.name}
                       onChange={(e) => setLead({ ...lead, name: e.target.value })}
-                      style={{ padding: '10px 14px', borderRadius: '6px', border: 'none', outline: 'none' }}
+                      style={{ padding: '10px 14px', borderRadius: '6px', border: 'none', outline: 'none', color: '#000' }}
                     />
                     <input
                       type="email"
@@ -164,14 +181,14 @@ export default function Home() {
                       required
                       value={lead.email}
                       onChange={(e) => setLead({ ...lead, email: e.target.value })}
-                      style={{ padding: '10px 14px', borderRadius: '6px', border: 'none', outline: 'none' }}
+                      style={{ padding: '10px 14px', borderRadius: '6px', border: 'none', outline: 'none', color: '#000' }}
                     />
                     <input
                       type="tel"
                       placeholder="Teléfono (Opcional)"
                       value={lead.phone}
                       onChange={(e) => setLead({ ...lead, phone: e.target.value })}
-                      style={{ padding: '10px 14px', borderRadius: '6px', border: 'none', outline: 'none' }}
+                      style={{ padding: '10px 14px', borderRadius: '6px', border: 'none', outline: 'none', color: '#000' }}
                     />
                     <button type="submit" style={{ backgroundColor: '#2563eb', color: '#fff', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>
                       Ver Informe Técnico Completo
