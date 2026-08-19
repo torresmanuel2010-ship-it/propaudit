@@ -7,7 +7,6 @@ export default function Home() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
 
-  // Estados para la captación de leads
   const [lead, setLead] = useState({ name: '', email: '', phone: '' });
   const [isUnlocked, setIsUnlocked] = useState(false);
 
@@ -41,10 +40,7 @@ export default function Home() {
   const handleUnlock = async (e) => {
     e.preventDefault();
     if (lead.name && lead.email) {
-      // 1. Desbloqueamos los resultados de inmediato para el usuario
       setIsUnlocked(true);
-
-      // 2. Enviamos los datos a Resend mediante tu endpoint de la API
       try {
         await fetch('/api/send', {
           method: 'POST',
@@ -62,10 +58,10 @@ export default function Home() {
     }
   };
 
-  const getScoreColor = (score) => {
-    if (score >= 90) return '#10b981';
-    if (score >= 50) return '#f59e0b';
-    return '#ef4444';
+  const getScoreBadge = (score) => {
+    if (score >= 90) return { bg: '#dcfce7', color: '#15803d', border: '#bbf7d0', label: 'Excelente' };
+    if (score >= 50) return { bg: '#fef3c7', color: '#b45309', border: '#fde68a', label: 'Mejorable' };
+    return { bg: '#fee2e2', color: '#b91c1c', border: '#fecaca', label: 'Crítico' };
   };
 
   return (
@@ -73,35 +69,49 @@ export default function Home() {
       <style jsx global>{`
         @media print {
           body { background-color: #ffffff !important; color: #0f172a !important; }
-          header, form, button, .no-print, .lead-gate { display: none !important; }
-          .pdf-container { box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; }
-          .pdf-header { display: block !important; border-bottom: 3px solid #2563eb; padding-bottom: 12px; margin-bottom: 24px; }
-          .blur-content { filter: none !important; pointer-events: auto !important; }
+          header, form, button, .no-print, .lead-gate, nav, footer { display: none !important; }
+          .pdf-container { box-shadow: none !important; padding: 0 !important; border: none !important; }
+          .blur-content { filter: none !important; opacity: 1 !important; pointer-events: auto !important; }
         }
       `}</style>
 
-      <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', padding: '40px 20px', fontFamily: 'system-ui, -apple-system, sans-serif', color: '#0f172a' }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+      <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', color: '#0f172a' }}>
+        
+        {/* Barra de Navegación */}
+        <nav style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #e2e8f0', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '800', fontSize: '20px', color: '#0f172a', tracking: '-0.5px' }}>
+            <span style={{ backgroundColor: '#2563eb', color: '#fff', padding: '6px 10px', borderRadius: '8px', fontSize: '16px' }}>⚡</span> PropAudit <span style={{ fontSize: '12px', color: '#2563eb', backgroundColor: '#eff6ff', padding: '2px 8px', borderRadius: '12px', fontWeight: '600' }}>PRO</span>
+          </div>
+          <div style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>
+            🔒 Auditorías Verificadas por Google PageSpeed
+          </div>
+        </nav>
+
+        <div style={{ maxWidth: '850px', margin: '0 auto', padding: '50px 20px' }}>
           
           {/* Header */}
           <header style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <div style={{ display: 'inline-block', backgroundColor: '#e0e7ff', color: '#4338ca', padding: '6px 16px', borderRadius: '20px', fontSize: '14px', fontWeight: '600', marginBottom: '12px' }}>
-              PropAudit Pro v1.2
-            </div>
-            <h1 style={{ fontSize: '36px', fontWeight: '800', margin: '0 0 10px 0' }}>Auditoría Web Inmobiliaria</h1>
-            <p style={{ color: '#64748b', fontSize: '18px', margin: '0' }}>Analiza el rendimiento, SEO y experiencia móvil de portales e inmobiliarias.</p>
+            <span style={{ display: 'inline-block', backgroundColor: '#eff6ff', color: '#2563eb', padding: '6px 16px', borderRadius: '20px', fontSize: '13px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '16px', border: '1px solid #dbeafe' }}>
+              Herramienta de Diagnóstico Inmobiliario
+            </span>
+            <h1 style={{ fontSize: '40px', fontWeight: '800', color: '#0f172a', margin: '0 0 16px 0', letterSpacing: '-1px', lineHeight: '1.2' }}>
+              Auditoría Técnica de Rendimiento y SEO
+            </h1>
+            <p style={{ color: '#475569', fontSize: '18px', margin: '0 auto', maxWidth: '600px', lineHeight: '1.6' }}>
+              Detecta fallos de carga y optimización móvil que están reduciendo la conversión de tus fichas de inmuebles.
+            </p>
           </header>
 
-          {/* Formulario Principal */}
-          <div style={{ backgroundColor: '#ffffff', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', marginBottom: '32px' }}>
+          {/* Card Formulario Principal */}
+          <div style={{ backgroundColor: '#ffffff', padding: '32px', borderRadius: '16px', boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.05)', border: '1px solid #e2e8f0', marginBottom: '40px' }}>
             <form onSubmit={handleAudit} style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
               <input
                 type="url"
-                placeholder="https://ejemplo-inmobiliaria.com"
+                placeholder="https://tu-inmobiliaria.com"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 required
-                style={{ flex: '1', minWidth: '280px', padding: '14px 18px', fontSize: '16px', borderRadius: '10px', border: '1px solid #cbd5e1', outline: 'none' }}
+                style={{ flex: '1', minWidth: '280px', padding: '16px 20px', fontSize: '16px', borderRadius: '10px', border: '1px solid #cbd5e1', outline: 'none', backgroundColor: '#f8fafc', transition: 'all 0.2s' }}
               />
               <button
                 type="submit"
@@ -110,117 +120,136 @@ export default function Home() {
                   backgroundColor: loading ? '#94a3b8' : '#2563eb',
                   color: '#ffffff',
                   border: 'none',
-                  padding: '14px 28px',
+                  padding: '16px 32px',
                   fontSize: '16px',
-                  fontWeight: '600',
+                  fontWeight: '700',
                   borderRadius: '10px',
-                  cursor: loading ? 'not-allowed' : 'pointer'
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  boxShadow: '0 4px 6px -1px rgba(37, 99, 235, 0.2)',
+                  transition: 'all 0.2s'
                 }}
               >
-                {loading ? 'Analizando web...' : 'Generar Informe'}
+                {loading ? 'Analizando Sitio Web...' : 'Analizar Ahora'}
               </button>
             </form>
-            {error && <p style={{ color: '#ef4444', marginTop: '12px', fontSize: '14px' }}>{error}</p>}
+            {error && <p style={{ color: '#dc2626', marginTop: '14px', fontSize: '14px', fontWeight: '500' }}>⚠️ {error}</p>}
           </div>
 
           {/* Resultados */}
           {result && (
-            <div className="pdf-container" style={{ backgroundColor: '#ffffff', padding: '32px', borderRadius: '16px', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', position: 'relative' }}>
+            <div className="pdf-container" style={{ backgroundColor: '#ffffff', padding: '40px', borderRadius: '20px', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01)', border: '1px solid #e2e8f0' }}>
               
-              <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '20px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              {/* Header Resultados */}
+              <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '24px', marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
                 <div>
-                  <h2 style={{ margin: '0 0 4px 0', fontSize: '20px', fontWeight: '700' }}>Informe de Auditoría</h2>
-                  <a href={result.url} target="_blank" rel="noreferrer" style={{ color: '#2563eb', textDecoration: 'none', fontSize: '14px' }}>{result.url}</a>
+                  <span style={{ fontSize: '12px', textTransform: 'uppercase', fontWeight: '700', color: '#64748b', letterSpacing: '0.5px' }}>Informe Generado para</span>
+                  <h2 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '800', color: '#0f172a' }}>{result.url}</h2>
                 </div>
                 {isUnlocked && (
                   <button
                     onClick={() => window.print()}
                     className="no-print"
-                    style={{ backgroundColor: '#0f172a', color: '#ffffff', border: 'none', padding: '10px 18px', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
+                    style={{ backgroundColor: '#0f172a', color: '#ffffff', border: 'none', padding: '12px 20px', borderRadius: '10px', cursor: 'pointer', fontWeight: '600', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}
                   >
-                    📄 Descargar PDF
+                    📥 Exportar Informe PDF
                   </button>
                 )}
               </div>
 
-              {/* Vista preliminar de métricas (Siempre visible) */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginBottom: '32px' }}>
-                <div style={{ backgroundColor: '#f8fafc', padding: '20px', borderRadius: '12px', border: '1px solid #f1f5f9' }}>
-                  <span style={{ fontSize: '14px', color: '#64748b', fontWeight: '500' }}>Rendimiento</span>
-                  <div style={{ fontSize: '32px', fontWeight: '800', color: getScoreColor(result.performanceScore), margin: '8px 0' }}>
-                    {result.performanceScore} <span style={{ fontSize: '16px', color: '#94a3b8' }}>/100</span>
-                  </div>
-                </div>
+              {/* Cards Métricas Principales */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: '36px' }}>
+                
+                {/* Score 1 */}
+                {[{ title: 'Rendimiento Técnico', score: result.performanceScore }, { title: 'Optimización SEO', score: result.seoScore }].map((item, idx) => {
+                  const badge = getScoreBadge(item.score);
+                  return (
+                    <div key={idx} style={{ backgroundColor: '#f8fafc', padding: '24px', borderRadius: '14px', border: '1px solid #f1f5f9' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                        <span style={{ fontSize: '14px', color: '#475569', fontWeight: '600' }}>{item.title}</span>
+                        <span style={{ backgroundColor: badge.bg, color: badge.color, border: `1px solid ${badge.border}`, fontSize: '11px', fontWeight: '700', padding: '2px 8px', borderRadius: '6px', textTransform: 'uppercase' }}>
+                          {badge.label}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '38px', fontWeight: '800', color: '#0f172a', tracking: '-1px' }}>
+                        {item.score} <span style={{ fontSize: '18px', color: '#94a3b8', fontWeight: '500' }}>/100</span>
+                      </div>
+                    </div>
+                  );
+                })}
 
-                <div style={{ backgroundColor: '#f8fafc', padding: '20px', borderRadius: '12px', border: '1px solid #f1f5f9' }}>
-                  <span style={{ fontSize: '14px', color: '#64748b', fontWeight: '500' }}>Optimización SEO</span>
-                  <div style={{ fontSize: '32px', fontWeight: '800', color: getScoreColor(result.seoScore), margin: '8px 0' }}>
-                    {result.seoScore} <span style={{ fontSize: '16px', color: '#94a3b8' }}>/100</span>
-                  </div>
-                </div>
               </div>
 
-              {/* Bloque del formulario Lead Magnet */}
+              {/* Lead Magnet Gate */}
               {!isUnlocked && (
-                <div className="lead-gate" style={{ backgroundColor: '#1e293b', color: '#ffffff', padding: '24px', borderRadius: '12px', textAlign: 'center', margin: '20px 0' }}>
-                  <h3 style={{ margin: '0 0 8px 0', fontSize: '18px' }}>🔒 Desbloquea el informe completo y el PDF</h3>
-                  <p style={{ color: '#94a3b8', fontSize: '14px', margin: '0 0 20px 0' }}>Introduce tus datos para acceder a las recomendaciones técnicas y descargar la auditoría.</p>
+                <div className="lead-gate" style={{ backgroundColor: '#0f172a', color: '#ffffff', padding: '36px', borderRadius: '16px', textAlign: 'center', margin: '24px 0', boxShadow: '0 10px 15px -3px rgba(15, 23, 42, 0.3)' }}>
+                  <div style={{ display: 'inline-block', backgroundColor: '#1e293b', padding: '8px 14px', borderRadius: '30px', fontSize: '13px', fontWeight: '600', color: '#60a5fa', marginBottom: '16px' }}>
+                    🔒 Informe Detallado Bloqueado
+                  </div>
+                  <h3 style={{ margin: '0 0 10px 0', fontSize: '22px', fontWeight: '700' }}>Accede al Diagnóstico Técnico Completo</h3>
+                  <p style={{ color: '#94a3b8', fontSize: '15px', margin: '0 0 24px 0', maxWidth: '500px', marginLeft: 'auto', marginRight: 'auto' }}>
+                    Introduce tus datos de contacto para desbloquear los datos de tiempo de carga, problemas de SEO móvil y descargar la versión en PDF.
+                  </p>
                   
-                  <form onSubmit={handleUnlock} style={{ display: 'grid', gap: '10px', maxWidth: '400px', margin: '0 auto' }}>
+                  <form onSubmit={handleUnlock} style={{ display: 'grid', gap: '12px', maxWidth: '420px', margin: '0 auto' }}>
                     <input
                       type="text"
-                      placeholder="Tu nombre"
+                      placeholder="Nombre completo"
                       required
                       value={lead.name}
                       onChange={(e) => setLead({ ...lead, name: e.target.value })}
-                      style={{ padding: '10px 14px', borderRadius: '6px', border: 'none', outline: 'none', color: '#000' }}
+                      style={{ padding: '14px 16px', borderRadius: '8px', border: '1px solid #334155', outline: 'none', backgroundColor: '#1e293b', color: '#fff', fontSize: '15px' }}
                     />
                     <input
                       type="email"
-                      placeholder="Tu correo electrónico"
+                      placeholder="Correo profesional"
                       required
                       value={lead.email}
                       onChange={(e) => setLead({ ...lead, email: e.target.value })}
-                      style={{ padding: '10px 14px', borderRadius: '6px', border: 'none', outline: 'none', color: '#000' }}
+                      style={{ padding: '14px 16px', borderRadius: '8px', border: '1px solid #334155', outline: 'none', backgroundColor: '#1e293b', color: '#fff', fontSize: '15px' }}
                     />
                     <input
                       type="tel"
-                      placeholder="Teléfono (Opcional)"
+                      placeholder="Teléfono de contacto (Opcional)"
                       value={lead.phone}
                       onChange={(e) => setLead({ ...lead, phone: e.target.value })}
-                      style={{ padding: '10px 14px', borderRadius: '6px', border: 'none', outline: 'none', color: '#000' }}
+                      style={{ padding: '14px 16px', borderRadius: '8px', border: '1px solid #334155', outline: 'none', backgroundColor: '#1e293b', color: '#fff', fontSize: '15px' }}
                     />
-                    <button type="submit" style={{ backgroundColor: '#2563eb', color: '#fff', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>
-                      Ver Informe Técnico Completo
+                    <button type="submit" style={{ backgroundColor: '#2563eb', color: '#fff', border: 'none', padding: '16px', borderRadius: '8px', fontWeight: '700', fontSize: '16px', cursor: 'pointer', marginTop: '8px', boxShadow: '0 4px 6px -1px rgba(37, 99, 235, 0.4)' }}>
+                      Desbloquear Auditoría e Informe PDF
                     </button>
                   </form>
                 </div>
               )}
 
-              {/* Contenido protegido (Desenfocado si no ha dejado sus datos) */}
-              <div style={{ filter: isUnlocked ? 'none' : 'blur(5px)', opacity: isUnlocked ? 1 : 0.3, pointerEvents: isUnlocked ? 'auto' : 'none', transition: 'all 0.3s' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '16px' }}>Checklist Técnico</h3>
+              {/* Contenido Detallado */}
+              <div style={{ filter: isUnlocked ? 'none' : 'blur(6px)', opacity: isUnlocked ? 1 : 0.25, pointerEvents: isUnlocked ? 'auto' : 'none', transition: 'all 0.4s ease' }}>
+                <h3 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '20px', color: '#0f172a' }}>Checklist de Optimización</h3>
+                
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 16px', backgroundColor: '#f8fafc', borderRadius: '8px' }}>
-                    <span>Tiempo Interactivo</span>
-                    <strong>{result.loadTime}</strong>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', backgroundColor: '#f8fafc', borderRadius: '10px', border: '1px solid #f1f5f9' }}>
+                    <span style={{ fontWeight: '500', color: '#334155' }}>Tiempo de Respuesta / Interactivo</span>
+                    <span style={{ fontWeight: '700', color: '#0f172a' }}>{result.loadTime}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 16px', backgroundColor: '#f8fafc', borderRadius: '8px' }}>
-                    <span>Optimización de Imágenes</span>
-                    <strong>{result.imageOptimization ? '✅ Correcta' : '❌ Requiere Compresión'}</strong>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', backgroundColor: '#f8fafc', borderRadius: '10px', border: '1px solid #f1f5f9' }}>
+                    <span style={{ fontWeight: '500', color: '#334155' }}>Compresión de Imágenes de Inmuebles</span>
+                    <span style={{ fontWeight: '700', color: result.imageOptimization ? '#16a34a' : '#dc2626' }}>
+                      {result.imageOptimization ? '✅ Sin problemas detectados' : '❌ Requiere Compresión WebP'}
+                    </span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 16px', backgroundColor: '#f8fafc', borderRadius: '8px' }}>
-                    <span>Adaptado a Dispositivos Móviles</span>
-                    <strong>{result.mobileFriendly ? '✅ Sí' : '❌ No optimizado'}</strong>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', backgroundColor: '#f8fafc', borderRadius: '10px', border: '1px solid #f1f5f9' }}>
+                    <span style={{ fontWeight: '500', color: '#334155' }}>Adaptabilidad Móvil (Responsive)</span>
+                    <span style={{ fontWeight: '700', color: result.mobileFriendly ? '#16a34a' : '#dc2626' }}>
+                      {result.mobileFriendly ? '✅ Correcta' : '❌ Versión móvil lenta o desajustada'}
+                    </span>
                   </div>
                 </div>
 
-                <div style={{ marginTop: '32px', backgroundColor: '#eff6ff', padding: '20px', borderRadius: '12px', borderLeft: '4px solid #2563eb' }}>
-                  <h4 style={{ margin: '0 0 8px 0', color: '#1e40af', fontSize: '16px' }}>💡 Diagnóstico Comercial</h4>
-                  <p style={{ margin: 0, color: '#1e3a8a', fontSize: '14px', lineHeight: '1.5' }}>
+                <div style={{ marginTop: '32px', backgroundColor: '#eff6ff', padding: '24px', borderRadius: '12px', borderLeft: '4px solid #2563eb' }}>
+                  <h4 style={{ margin: '0 0 8px 0', color: '#1e40af', fontSize: '16px', fontWeight: '700' }}>💡 Diagnóstico Impacto de Negocio</h4>
+                  <p style={{ margin: 0, color: '#1e3a8a', fontSize: '15px', lineHeight: '1.6' }}>
                     {result.performanceScore < 50 
-                      ? 'La velocidad actual de la web está provocando pérdidas de tráfico comprador. Un tiempo de carga elevado reduce hasta un 40% las solicitudes de visita en fichas de inmuebles.'
-                      : 'La web cuenta con una base sólida de rendimiento, aunque se recomienda optimizar la carga de imágenes pesadas para mejorar la conversión móvil.'}
+                      ? 'La velocidad actual del portal está penalizando el posicionamiento en Google y aumentando la tasa de rebote en dispositivos móviles. Una optimización básica recuperaría hasta un 35% del tráfico perdido.'
+                      : 'El portal cuenta con una excelente base técnica. Se recomienda mantener monitorizado el tamaño de las fotografías subidas en nuevos anuncios para preservar la velocidad actual.'}
                   </p>
                 </div>
               </div>
@@ -229,6 +258,12 @@ export default function Home() {
           )}
 
         </div>
+
+        {/* Footer Corporativo */}
+        <footer style={{ borderTop: '1px solid #e2e8f0', padding: '30px 20px', textAlign: 'center', color: '#94a3b8', fontSize: '13px', marginTop: '60px' }}>
+          PropAudit © 2026 — Plataforma de Auditoría para Agencias e Inmobiliarias.
+        </footer>
+
       </div>
     </>
   );
